@@ -25,8 +25,7 @@ Route::post('PekaCostCenter/list','PekaCostCenter@list');
 
 Route::post('PekaEmployee/list','PekaEmployee@list');
 Route::post('PekaEmployee/get','PekaEmployee@get');
-
-
+Route::post('PekaEmployee/connect_ldap','PekaEmployee@connect_ldap');
 
 Route::post('TObservasi/list','TObservasi@list');
 Route::post('TObservasi/get','TObservasi@get');

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use PDF;
+use GuzzleHttp\Client;
 class PekaEmployee extends Controller
 {
     /**
@@ -19,7 +20,7 @@ class PekaEmployee extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function initdata(){
         $sql="CALL krp.sp_PekaEmployee_listmenu()";
         return DB::select($sql);
@@ -30,12 +31,12 @@ class PekaEmployee extends Controller
         $data['content']="krp.PekaEmployee.list_form";
         $data['judul']="Master Klasifikasi Pengemudi";
         $data['statusnya']=$id;
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('PekaEmployee','class="current" ');
-        
+
         return view('admin-user.templatepdsi',$data);
     }
     public function details($id)
@@ -45,7 +46,7 @@ class PekaEmployee extends Controller
         $data['judul']="Detail Serah Terima";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('PekaEmployee','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -61,7 +62,7 @@ class PekaEmployee extends Controller
         $data['judul']="Form Master Klasifikasi Pengemudi";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('PekaEmployee','class="current" ');
         $user=Auth::user();
         $data['penerima']=$user->username;
@@ -118,10 +119,10 @@ class PekaEmployee extends Controller
         //$data['row']=ModelPekaEmployee::where('clasificationid',$id)->first();
         $data['content']="krp.PekaEmployee.form_input";
         $data['judul']="Master Klasifikasi Pengemudi";
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('PekaEmployee','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -156,7 +157,7 @@ class PekaEmployee extends Controller
      */
     public function destroy($id)
     {
-        
+
             $user=Auth::user();
 	    //$user->site_id=1;
             $sql="call krp.sp_PekaEmployee_delete("
@@ -164,10 +165,10 @@ class PekaEmployee extends Controller
             DB::select($sql);
             Session::put('alert-success','Data Berhasil DiHapus');
             return redirect('/admin-user/PekaEmployee-list/0');
-        
-        
+
+
     }
-    
+
     function printpdf($id){
         $data['row']=Modelserahterima::where('form_no',$id)->first();
         $pdf = PDF::loadview('pdf/serahterima',$data);
@@ -179,10 +180,10 @@ class PekaEmployee extends Controller
         $response['code'] = 200;
         $response['data'] = DB::select(
                 'exec sp_PekaEmployee_list
-                        
+
                 ',
                 [
-                        
+
 
                 ]
         );
@@ -203,6 +204,53 @@ class PekaEmployee extends Controller
                 ]
         );
 
+        return response()->json($response);
+    }
+
+    public static function connect_ldap1(Request $request){
+        $client = new Client();
+        $res = $client->request('POST', 'https://apps.pertamina.com/api/digital_absensi/Users/loginLDAP', [
+                'username' => 'trainee03',
+                'password' => '123@ptm'
+        ]);
+        echo $res->getStatusCode();
+        // 200
+        echo $res->getHeader('content-type');
+        // 'application/json; charset=utf8'
+        echo $res->getBody();
+        // {"type":"User"...'
+
+            // {
+            //     "status": true,
+            //     "message": "User login successful"
+            //   }
+
+        $response['status'] = 'SUCCESS';
+        $response['code'] = 200;
+        $response['data'] = $res->getBody();
+
+        return response()->json($response);
+    }
+
+    public static function connect_ldap(Request $request){
+        $param=array(
+            'username' => 'trainee03',
+            'password' => '123@ptm'
+        );
+        $param_set = json_encode($param);
+        $link = curl_init('https://apps.pertamina.com/api/digital_absensi/Users/loginLDAP');
+        curl_setopt($link, CURLOPT_CUSTOMREQUEST,'POST');
+        curl_setopt($link, CURLOPT_POSTFIELDS,$param_set);
+        curl_setopt($link, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($link, CURLOPT_HTTPHEADER,array(
+            'Content-type: application/json'
+        ));
+        $contents=curl_exec($link);
+
+
+        $response['status'] = 'SUCCESS';
+        $response['code'] = 200;
+        $response['data'] = $contents;
         return response()->json($response);
     }
 }

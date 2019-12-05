@@ -19,7 +19,7 @@ class TObservasi extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function initdata(){
         $sql="CALL krp.sp_TObservasi_listmenu()";
         return DB::select($sql);
@@ -30,12 +30,12 @@ class TObservasi extends Controller
         $data['content']="krp.TObservasi.list_form";
         $data['judul']="Master Klasifikasi Pengemudi";
         $data['statusnya']=$id;
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObservasi','class="current" ');
-        
+
         return view('admin-user.templatepdsi',$data);
     }
     public function details($id)
@@ -45,7 +45,7 @@ class TObservasi extends Controller
         $data['judul']="Detail Serah Terima";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObservasi','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -61,7 +61,7 @@ class TObservasi extends Controller
         $data['judul']="Form Master Klasifikasi Pengemudi";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObservasi','class="current" ');
         $user=Auth::user();
         $data['penerima']=$user->username;
@@ -118,10 +118,10 @@ class TObservasi extends Controller
         //$data['row']=ModelTObservasi::where('clasificationid',$id)->first();
         $data['content']="krp.TObservasi.form_input";
         $data['judul']="Master Klasifikasi Pengemudi";
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObservasi','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -156,7 +156,7 @@ class TObservasi extends Controller
      */
     public function destroy($id)
     {
-        
+
             $user=Auth::user();
 	    //$user->site_id=1;
             $sql="call krp.sp_TObservasi_delete("
@@ -164,10 +164,10 @@ class TObservasi extends Controller
             DB::select($sql);
             Session::put('alert-success','Data Berhasil DiHapus');
             return redirect('/admin-user/TObservasi-list/0');
-        
-        
+
+
     }
-    
+
     function printpdf($id){
         $data['row']=Modelserahterima::where('form_no',$id)->first();
         $pdf = PDF::loadview('pdf/serahterima',$data);
@@ -178,10 +178,10 @@ class TObservasi extends Controller
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $response['data'] = DB::select(
-                'call sp_TObservasi_list(
+                'exec sp_TObservasi_list
                         ?,
                         ?
-                )',
+                ',
                 [
                         $request->UserName,
                         $request->filter
@@ -200,7 +200,7 @@ class TObservasi extends Controller
                         ?
                 )',
                 [
-                    $request->IDobservasion    
+                    $request->IDobservasion
 
                 ]
         );
@@ -216,7 +216,7 @@ class TObservasi extends Controller
                         ?
                 ',
                 [
-                    $request->IDobservasion    
+                    $request->IDobservasion
 
                 ]
         );
@@ -265,7 +265,7 @@ class TObservasi extends Controller
                     ?,
                     ?,
                     ?,
-                    ?                   
+                    ?
                 ',
                 [
                     $request->IDobservasion,
@@ -349,7 +349,7 @@ class TObservasi extends Controller
                     ?,
                     ?,
                     ?,
-                    ?                    
+                    ?
                 ',
                 [
                     $request->IDobservasion,
