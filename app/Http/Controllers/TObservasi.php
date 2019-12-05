@@ -211,7 +211,7 @@ class TObservasi extends Controller
     public static function delete(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::raw(
+        $response['data'] = DB::select(
                 'exec sp_TObservasi_delete
                         ?
                 ',
@@ -228,7 +228,7 @@ class TObservasi extends Controller
     public static function insert(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::raw(
+        $result = DB::select(
                 'exec sp_TObservasi_insert
                     ?,
                     ?,
@@ -307,13 +307,35 @@ class TObservasi extends Controller
                 ]
         );
 
+        $loop="";
+        foreach($result as $row)
+        {
+            $response['IDobservasion'] =$row->IDobservasion;
+            $detail=explode(",",$request->unsafeDetailId);
+            foreach($detail as $Subksid)
+            {
+                DB::insert(
+                'exec sp_TObsKlas_insert
+                    ?,
+                    ?,
+                    ?
+                ',
+                [
+                    $row->Klasifikasi,
+                    $row->IDobservasion,
+                    $Subksid
+                ]);
+            }
+            $response['unsafeDetailId']=$detail;
+        }
+        $response['data']=$result;
         return response()->json($response);
     }
 
     public static function updateapi(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::raw(
+        $result= DB::select(
                 'exec sp_TObservasi_update
                     ?,
                     ?,
@@ -389,6 +411,29 @@ class TObservasi extends Controller
                     $request->CostCenter
                 ]
         );
+
+        $loop="";
+        foreach($result as $row)
+        {
+            $response['IDobservasion'] =$row->IDobservasion;
+            $detail=explode(",",$request->unsafeDetailId);
+            foreach($detail as $Subksid)
+            {
+                DB::insert(
+                'exec sp_TObsKlas_insert
+                    ?,
+                    ?,
+                    ?
+                ',
+                [
+                    $row->Klasifikasi,
+                    $row->IDobservasion,
+                    $Subksid
+                ]);
+            }
+            $response['unsafeDetailId']=$detail;
+        }
+        $response['data']=$result;
 
         return response()->json($response);
     }

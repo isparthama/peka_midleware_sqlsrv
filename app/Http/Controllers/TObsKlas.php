@@ -19,7 +19,7 @@ class TObsKlas extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function initdata(){
         $sql="CALL krp.sp_TObsKlas_listmenu()";
         return DB::select($sql);
@@ -30,12 +30,12 @@ class TObsKlas extends Controller
         $data['content']="krp.TObsKlas.list_form";
         $data['judul']="Master Klasifikasi Pengemudi";
         $data['statusnya']=$id;
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObsKlas','class="current" ');
-        
+
         return view('admin-user.templatepdsi',$data);
     }
     public function details($id)
@@ -45,7 +45,7 @@ class TObsKlas extends Controller
         $data['judul']="Detail Serah Terima";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObsKlas','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -61,7 +61,7 @@ class TObsKlas extends Controller
         $data['judul']="Form Master Klasifikasi Pengemudi";
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObsKlas','class="current" ');
         $user=Auth::user();
         $data['penerima']=$user->username;
@@ -118,10 +118,10 @@ class TObsKlas extends Controller
         //$data['row']=ModelTObsKlas::where('clasificationid',$id)->first();
         $data['content']="krp.TObsKlas.form_input";
         $data['judul']="Master Klasifikasi Pengemudi";
-        
+
         $global_function=new global_function();
         $global_function->clear_all_session();
-        
+
         Session::put('TObsKlas','class="current" ');
         return view('admin-user.templatepdsi',$data);
     }
@@ -156,7 +156,7 @@ class TObsKlas extends Controller
      */
     public function destroy($id)
     {
-        
+
             $user=Auth::user();
 	    //$user->site_id=1;
             $sql="call krp.sp_TObsKlas_delete("
@@ -164,10 +164,10 @@ class TObsKlas extends Controller
             DB::select($sql);
             Session::put('alert-success','Data Berhasil DiHapus');
             return redirect('/admin-user/TObsKlas-list/0');
-        
-        
+
+
     }
-    
+
     function printpdf($id){
         $data['row']=Modelserahterima::where('form_no',$id)->first();
         $pdf = PDF::loadview('pdf/serahterima',$data);
@@ -179,10 +179,10 @@ class TObsKlas extends Controller
         $response['code'] = 200;
         $response['data'] = DB::select(
                 'exec sp_TObsKlas_list
-                        
+                        ?
                 ',
                 [
-                        
+                    $request->ObsID
 
                 ]
         );
@@ -198,7 +198,7 @@ class TObsKlas extends Controller
                         ?
                 )',
                 [
-                    $request->ObsID    
+                    $request->ObsID
 
                 ]
         );
@@ -214,7 +214,7 @@ class TObsKlas extends Controller
                         ?
                 )',
                 [
-                    $request->KlasifikasiID    
+                    $request->KlasifikasiID
 
                 ]
         );
@@ -226,11 +226,11 @@ class TObsKlas extends Controller
     public static function insert(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::raw(
+        $response['data'] = DB::select(
                 'exec sp_TObsKlas_insert
                     ?,
                     ?,
-                    ?                    
+                    ?
                 ',
                 [
                     $request->KsID,
@@ -250,7 +250,7 @@ class TObsKlas extends Controller
                     ?,
                     ?,
                     ?,
-                    ?                    
+                    ?
                 )',
                 [
                     $request->KlasifikasiID,
