@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use PDF;
+use App\Http\Controllers\NotifikasiEmailController;
 class TObservasi extends Controller
 {
     /**
@@ -196,9 +197,9 @@ class TObservasi extends Controller
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $response['data'] = DB::select(
-                'call TObservasi_get(
+                'exec sp_TObservasi_get
                         ?
-                )',
+                ',
                 [
                     $request->IDobservasion
 
@@ -226,6 +227,32 @@ class TObservasi extends Controller
 
 
     public static function insert(Request $request){
+        $destinationPath = 'uploads';
+
+        $file_1 = $request->file('attach_file_1');
+        if($file_1!=""){
+            $nama_file_1 = $file_1->getClientOriginalName();
+            $file_1->move($destinationPath,$file_1->getClientOriginalName());
+        }else{
+            $nama_file_1 = "-";
+        }
+
+        $file_2 = $request->file('attach_file_2');
+        if($file_2!=""){
+            $nama_file_2 = $file_2->getClientOriginalName();
+            $file_2->move($destinationPath,$file_2->getClientOriginalName());
+        }else{
+            $nama_file_2 = "-";
+        }
+
+        $file_3 = $request->file('attach_file_3');
+        if($file_3!=""){
+            $nama_file_3 = $file_3->getClientOriginalName();
+            $file_3->move($destinationPath,$file_3->getClientOriginalName());
+        }else{
+            $nama_file_3 = "-";
+        }
+
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $result = DB::select(
@@ -327,12 +354,42 @@ class TObservasi extends Controller
                 ]);
             }
             $response['unsafeDetailId']=$detail;
+            $emailNotif = new NotifikasiEmailController();
+            if($row->processApl>100){
+                $response['Email']=$emailNotif->sendEmailRequest($row);
+            }
         }
         $response['data']=$result;
         return response()->json($response);
     }
 
     public static function updateapi(Request $request){
+        $destinationPath = 'uploads';
+
+        $file_1 = $request->file('attach_file_1');
+        if($file_1!=""){
+            $nama_file_1 = $file_1->getClientOriginalName();
+            $file_1->move($destinationPath,$file_1->getClientOriginalName());
+        }else{
+            $nama_file_1 = "-";
+        }
+
+        $file_2 = $request->file('attach_file_2');
+        if($file_2!=""){
+            $nama_file_2 = $file_2->getClientOriginalName();
+            $file_2->move($destinationPath,$file_2->getClientOriginalName());
+        }else{
+            $nama_file_2 = "-";
+        }
+
+        $file_3 = $request->file('attach_file_3');
+        if($file_3!=""){
+            $nama_file_3 = $file_3->getClientOriginalName();
+            $file_3->move($destinationPath,$file_3->getClientOriginalName());
+        }else{
+            $nama_file_3 = "-";
+        }
+
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $result= DB::select(
@@ -432,6 +489,10 @@ class TObservasi extends Controller
                 ]);
             }
             $response['unsafeDetailId']=$detail;
+            $emailNotif = new NotifikasiEmailController();
+            if($row->processApl>100){
+                $response['Email']=$emailNotif->sendEmailRequest($row);
+            }
         }
         $response['data']=$result;
 

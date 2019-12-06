@@ -246,11 +246,11 @@ class PekaEmployee extends Controller
             'Content-type: application/json'
         ));
         $contents=curl_exec($link);
-
+        $array = json_decode($contents,true);
 
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = $contents;
+        $response['data'] = $array;
         return response()->json($response);
     }
 }
