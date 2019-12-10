@@ -192,53 +192,55 @@ class PekaEmployee extends Controller
     }
 
     public static function get(Request $request){
-        $response['status'] = 'SUCCESS';
-        $response['code'] = 200;
-        $response['data'] = DB::select(
-                'exec sp_PekaEmployee_get
-                        ?
-                ',
-                [
-                        $request->UserName
 
-                ]
-        );
+        $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
+        $ldap_data = json_decode(json_encode($ldap_array), FALSE);
 
-        return response()->json($response);
-    }
+        if ($ldap_data[0]->Data->value=true){
+            $peka_employee= DB::select(
+                    'exec sp_PekaEmployee_get_ldap
+                            ?
+                    ',
+                    [
+                        $ldap_data[0]->Data->Email
 
-    public static function connect_ldap1(Request $request){
-        $client = new Client();
-        $res = $client->request('POST', 'https://apps.pertamina.com/api/digital_absensi/Users/loginLDAP', [
-                'username' => 'trainee03',
-                'password' => '123@ptm'
-        ]);
-        echo $res->getStatusCode();
-        // 200
-        echo $res->getHeader('content-type');
-        // 'application/json; charset=utf8'
-        echo $res->getBody();
-        // {"type":"User"...'
+                    ]
+            );
+        } else {
+            $peka_employee= DB::select(
+                    'exec sp_PekaEmployee_get
+                            ?
+                    ',
+                    [
+                            $request->UserName
 
-            // {
-            //     "status": true,
-            //     "message": "User login successful"
-            //   }
+                    ]
+            );
+        }
 
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = $res->getBody();
-
+        $response['data'] =$peka_employee;
+        $response['ldap_array'] = $ldap_data[0]->Data->Email;
         return response()->json($response);
     }
 
     public static function connect_ldap(Request $request){
+        $array = self::periksa_ldap($request->username,$request->password);
+
+        $response['status'] = 'SUCCESS';
+        $response['code'] = 200;
+        $response['data'] = $array;
+        return response()->json($response);
+    }
+
+    public static  function periksa_ldap($username,$password){
         $param=array(
-            'username' => 'trainee03',
-            'password' => '123@ptm'
+            'username' => $username,
+            'password' => $password
         );
         $param_set = json_encode($param);
-        $link = curl_init('https://apps.pertamina.com/api/digital_absensi/Users/loginLDAP');
+        $link = curl_init('https://apps.pertamina.com/api/login/Users/loginLDAP');
         curl_setopt($link, CURLOPT_CUSTOMREQUEST,'POST');
         curl_setopt($link, CURLOPT_POSTFIELDS,$param_set);
         curl_setopt($link, CURLOPT_RETURNTRANSFER,true);
@@ -246,11 +248,6 @@ class PekaEmployee extends Controller
             'Content-type: application/json'
         ));
         $contents=curl_exec($link);
-        $array = json_decode($contents,true);
-
-        $response['status'] = 'SUCCESS';
-        $response['code'] = 200;
-        $response['data'] = $array;
-        return response()->json($response);
+        return json_decode($contents,true);
     }
 }
