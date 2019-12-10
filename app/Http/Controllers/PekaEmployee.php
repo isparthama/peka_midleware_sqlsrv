@@ -192,20 +192,31 @@ class PekaEmployee extends Controller
     }
 
     public static function get(Request $request){
+        if ($request->password!=""){
+            $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
+            $ldap_data = json_decode(json_encode($ldap_array), FALSE);
 
-        $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
-        $ldap_data = json_decode(json_encode($ldap_array), FALSE);
+            if ($ldap_data[0]->Data->value=true){
+                $peka_employee= DB::select(
+                        'exec sp_PekaEmployee_get_ldap
+                                ?
+                        ',
+                        [
+                            $ldap_data[0]->Data->Email
 
-        if ($ldap_data[0]->Data->value=true){
-            $peka_employee= DB::select(
-                    'exec sp_PekaEmployee_get_ldap
-                            ?
-                    ',
-                    [
-                        $ldap_data[0]->Data->Email
+                        ]
+                );
+            } else {
+                $peka_employee= DB::select(
+                        'exec sp_PekaEmployee_get
+                                ?
+                        ',
+                        [
+                                $request->UserName
 
-                    ]
-            );
+                        ]
+                );
+            }
         } else {
             $peka_employee= DB::select(
                     'exec sp_PekaEmployee_get
@@ -221,7 +232,6 @@ class PekaEmployee extends Controller
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $response['data'] =$peka_employee;
-        $response['ldap_array'] = $ldap_data[0]->Data->Email;
         return response()->json($response);
     }
 
