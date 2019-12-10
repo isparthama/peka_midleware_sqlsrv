@@ -228,6 +228,7 @@ class TObservasi extends Controller
 
     public static function insert(Request $request){
         $destinationPath = 'uploads';
+        $request->DateObs=str_replace('"','',$request->DateObs);
 
         $file_1 = $request->file('attach_file_1');
         if($file_1!=""){
@@ -365,6 +366,7 @@ class TObservasi extends Controller
 
     public static function updateapi(Request $request){
         $destinationPath = 'uploads';
+        $request->DateObs=str_replace('"','',$request->DateObs);
 
         $file_1 = $request->file('attach_file_1');
         if($file_1!=""){
