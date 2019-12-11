@@ -178,7 +178,7 @@ class TObservasi extends Controller
     public static function list(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::select(
+        $data = DB::select(
                 'exec sp_TObservasi_list
                         ?,
                         ?
@@ -190,6 +190,7 @@ class TObservasi extends Controller
                 ]
         );
 
+        $response['data']=$data;
         return response()->json($response);
     }
 
@@ -225,6 +226,11 @@ class TObservasi extends Controller
         return response()->json($response);
     }
 
+    public function downloadFile($namafile)
+    {
+        $file_path = public_path('uploads/'.$namafile);
+        return response()->download($file_path);
+    }
 
     public static function insert(Request $request){
         $destinationPath = 'uploads';
