@@ -342,6 +342,9 @@ class TObservasi extends Controller
             $detail=explode(",",$request->unsafeDetailId);
             foreach($detail as $Subksid)
             {
+                $row->Klasifikasi=str_replace('"','',$row->Klasifikasi);
+                $row->IDobservasion=str_replace('"','',$row->IDobservasion);
+                $Subksid=str_replace('"','',$Subksid);
                 DB::insert(
                 'exec sp_TObsKlas_insert
                     ?,
@@ -478,6 +481,9 @@ class TObservasi extends Controller
             $detail=explode(",",$request->unsafeDetailId);
             foreach($detail as $Subksid)
             {
+                $row->Klasifikasi=str_replace('"','',$row->Klasifikasi);
+                $row->IDobservasion=str_replace('"','',$row->IDobservasion);
+                $Subksid=str_replace('"','',$Subksid);
                 DB::insert(
                 'exec sp_TObsKlas_insert
                     ?,
