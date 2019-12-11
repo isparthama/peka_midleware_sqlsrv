@@ -32,7 +32,7 @@ Route::post('TObservasi/get','TObservasi@get');
 Route::post('TObservasi/delete','TObservasi@delete');
 Route::post('TObservasi/insert','TObservasi@insert');
 Route::post('TObservasi/update','TObservasi@updateapi');
-Route::get('/TObservasi/download/{file}','TObservasi@downloadFile');
+Route::get('TObservasi/download/{file}','TObservasi@downloadFile');
 
 Route::post('TObsKlas/list','TObsKlas@list');
 Route::post('TObsKlas/get','TObsKlas@get');
