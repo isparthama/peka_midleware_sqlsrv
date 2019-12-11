@@ -253,7 +253,7 @@ class TObservasi extends Controller
         }else{
             $nama_file_3 = "-";
         }
-
+        $request->FilePhoto = $nama_file_1.",".$nama_file_2.",".$nama_file_3;
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $result = DB::select(
@@ -392,6 +392,7 @@ class TObservasi extends Controller
             $nama_file_3 = "-";
         }
 
+        $request->FilePhoto = $nama_file_1.",".$nama_file_2.",".$nama_file_3;
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $result= DB::select(
