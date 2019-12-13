@@ -192,11 +192,13 @@ class PekaEmployee extends Controller
     }
 
     public static function get(Request $request){
-        if ($request->password!=""){
+        $isldap=0;
+        if ($request->Password!=""){
             $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
             $ldap_data = json_decode(json_encode($ldap_array), FALSE);
-
+            $response['value']=$ldap_data[0]->Data->value;
             if ($ldap_data[0]->Data->value=true){
+                $isldap=1;
                 $peka_employee= DB::select(
                         'exec sp_PekaEmployee_get_ldap
                                 ?
@@ -206,6 +208,21 @@ class PekaEmployee extends Controller
 
                         ]
                 );
+                $response['db']='sap_employee';
+                $response['is_empty']=empty($peka_employee);
+                if (empty($peka_employee)){
+                    $peka_employee= DB::select(
+                            'exec sp_PekaEmployee_get
+                                    ?
+                            ',
+                            [
+                                    $request->UserName
+
+                            ]
+                    );
+                    $response['db']='peka_employee';
+                }
+                $response['ldap_data'] = $ldap_data;
             } else {
                 $peka_employee= DB::select(
                         'exec sp_PekaEmployee_get
@@ -216,6 +233,7 @@ class PekaEmployee extends Controller
 
                         ]
                 );
+                $response['db']='peka_employee';
             }
         } else {
             $peka_employee= DB::select(
@@ -227,11 +245,14 @@ class PekaEmployee extends Controller
 
                     ]
             );
+            $response['db']='peka_employee';
         }
 
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $response['data'] =$peka_employee;
+        $response['isldap'] = $isldap;
+
         return response()->json($response);
     }
 
