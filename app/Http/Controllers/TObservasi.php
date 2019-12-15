@@ -181,11 +181,13 @@ class TObservasi extends Controller
         $data = DB::select(
                 'exec sp_TObservasi_list
                         ?,
+                        ?,
                         ?
                 ',
                 [
                         $request->UserName,
-                        $request->filter
+                        $request->filter,
+                        $request->costcenter
 
                 ]
         );
