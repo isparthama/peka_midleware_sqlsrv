@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 use GuzzleHttp\Client;
+use Illuminate\Support\Collection;
 class PekaEmployee extends Controller
 {
     /**
@@ -191,11 +192,21 @@ class PekaEmployee extends Controller
         return response()->json($response);
     }
 
+    public static function is_ok($ldap_data){
+        try {
+            $val=$ldap_data[0]->Data->value;
+            return true;
+        } catch(\Throwable  $e) {
+            return false;
+        }
+    }
     public static function get(Request $request){
         $isldap=0;
-        if ($request->Password!=""){
-            $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
-            $ldap_data = json_decode(json_encode($ldap_array), FALSE);
+        $peka_employee = [];
+        $response['status'] = 'FAIL';
+        $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
+        $ldap_data = json_decode(json_encode($ldap_array), FALSE);
+        if (self::is_ok($ldap_data)){
             $response['value']=$ldap_data[0]->Data->value;
             if ($ldap_data[0]->Data->value=true){
                 $isldap=1;
@@ -235,20 +246,11 @@ class PekaEmployee extends Controller
                 );
                 $response['db']='peka_employee';
             }
-        } else {
-            $peka_employee= DB::select(
-                    'exec sp_PekaEmployee_get
-                            ?
-                    ',
-                    [
-                            $request->UserName
-
-                    ]
-            );
-            $response['db']='peka_employee';
+            if (!empty($peka_employee)){
+                $response['status'] = 'SUCCESS';
+            }
         }
 
-        $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $response['data'] =$peka_employee;
         $response['isldap'] = $isldap;
