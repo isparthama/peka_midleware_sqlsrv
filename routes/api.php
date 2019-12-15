@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('phpinfo', function(){
+	phpinfo();
+});
+
 Route::post('TArea/list_area','TArea@list_area');
 Route::post('TSubArea/list_sub_area','TSubArea@list_sub_area');
 Route::post('TUnsDetail/list','TUnsDetail@list');
