@@ -194,7 +194,7 @@ class PekaEmployee extends Controller
 
     public static function is_ok($ldap_data){
         try {
-            $val=$ldap_data[0]->Data->value;
+            $val=$ldap_data->dataLDAP->Data->value;
             return true;
         } catch(\Throwable  $e) {
             return false;
@@ -207,15 +207,15 @@ class PekaEmployee extends Controller
         $ldap_array=self::periksa_ldap($request->UserName,$request->Password);
         $ldap_data = json_decode(json_encode($ldap_array), FALSE);
         if (self::is_ok($ldap_data)){
-            $response['value']=$ldap_data[0]->Data->value;
-            if ($ldap_data[0]->Data->value=true){
+            $response['value']=$ldap_data->dataLDAP->Data->value;
+            if ($ldap_data->dataLDAP->Data->value=true){
                 $isldap=1;
                 $peka_employee= DB::select(
                         'exec sp_PekaEmployee_get_ldap
                                 ?
                         ',
                         [
-                            $ldap_data[0]->Data->Email
+                            $ldap_data->dataLDAP->Data->Email
 
                         ]
                 );
