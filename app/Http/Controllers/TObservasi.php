@@ -20,6 +20,11 @@ class TObservasi extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+       header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+    }
 
     public function initdata(){
         $sql="CALL krp.sp_TObservasi_listmenu()";
