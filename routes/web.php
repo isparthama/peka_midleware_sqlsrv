@@ -48,4 +48,6 @@ Route::get('/tables/data', function () {
     return view('/layouts/pages/tables/data');
 });*/
 
-
+Route::get('test',function(){
+    return phpinfo();
+});
