@@ -204,7 +204,7 @@ class TObservasi extends Controller
     public static function get(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $response['data'] = DB::select(
+        $Observasi = DB::select(
                 'exec sp_TObservasi_get
                         ?
                 ',
@@ -213,6 +213,14 @@ class TObservasi extends Controller
 
                 ]
         );
+
+        foreach ($Observasi as $o){
+            $ObsKlass = DB::select('exec sp_TObsKlas_list '.$o->IDobservasion);
+
+            $o->unsafedetail=$ObsKlass;
+        }
+
+        $response['data']=$Observasi;
 
         return response()->json($response);
     }
