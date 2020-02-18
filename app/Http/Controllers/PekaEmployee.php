@@ -270,7 +270,8 @@ class PekaEmployee extends Controller
     public static  function periksa_ldap($username,$password){
         $param=array(
             'username' => $username,
-            'password' => $password
+            'password' => $password,
+            'appname' => ''
         );
         $param_set = json_encode($param);
         $link = curl_init('https://apps.pertamina.com/api/login/Users/loginLDAP');
