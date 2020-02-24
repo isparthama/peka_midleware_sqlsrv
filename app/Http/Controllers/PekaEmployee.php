@@ -209,6 +209,34 @@ class PekaEmployee extends Controller
         if (self::is_ok($ldap_data)){
             $response['value']=$ldap_data->dataLDAP->Data->value;
             if ($ldap_data->dataLDAP->Data->value=true){
+                foreach ($ldap_data->dataSAP as $dataSAP){
+                    DB::select(
+                            'exec sp_DB_SAP_Employee_insert
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?,
+                                ?                 
+                            ',
+                            [
+                                $dataSAP->EMPLOYEE_NOPEK,
+                                $dataSAP->EMPLOYEE_NOPEK,
+                                $dataSAP->USERNAME,
+                                $dataSAP->EMPLOYEE_EMAIL,
+                                $dataSAP->EMPLOYEE_NAMA,
+                                $dataSAP->GENDER,
+                                $dataSAP->EMPLOYEE_POSIDI,
+                                $dataSAP->EMPLOYEE_POSTEXT,
+                                $dataSAP->EMPLOYEE_CC,
+                                $dataSAP->COSTCENTERNAME                            ]
+                    );
+                }
+                
                 $isldap=1;
                 $peka_employee= DB::select(
                         'exec sp_PekaEmployee_get_ldap
