@@ -177,6 +177,7 @@ class TUnsDetail extends Controller
     public static function list(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
+        $data['']=[];
         $PROCEDURE = DB::select(
                 'exec sp_TUnsDetail_list
                         ?,
