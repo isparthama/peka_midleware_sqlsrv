@@ -177,7 +177,7 @@ class TUnsDetail extends Controller
     public static function list(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
-        $data['PROCEDURE'] = DB::select(
+        $PROCEDURE = DB::select(
                 'exec sp_TUnsDetail_list
                         ?,
                         ?
@@ -188,7 +188,10 @@ class TUnsDetail extends Controller
 
                 ]
         );
-        $data['PERALATAN & BAHAN'] = DB::select(
+        if (!empty($PROCEDURE)){
+            $data['PROCEDURE']=$PROCEDURE;
+        }
+        $PERALATAN_BAHAN = DB::select(
             'exec sp_TUnsDetail_list
                     ?,
                     ?
@@ -199,7 +202,10 @@ class TUnsDetail extends Controller
 
             ]
     );
-    $data['APD'] = DB::select(
+    if (!empty($PERALATAN_BAHAN)){
+        $data['PERALATAN & BAHAN']=$PERALATAN_BAHAN;
+    }
+    $APD = DB::select(
         'exec sp_TUnsDetail_list
                 ?,
                 ?
@@ -210,7 +216,10 @@ class TUnsDetail extends Controller
 
         ]
     );
-    $data['LAIN - LAIN'] = DB::select(
+    if (!empty($APD)){
+        $data['APD']=$APD;
+    }
+    $LAIN_LAIN = DB::select(
         'exec sp_TUnsDetail_list
                 ?,
                 ?
@@ -221,7 +230,10 @@ class TUnsDetail extends Controller
 
         ]
     );
-    $data['LINGKUNGAN KERJA'] = DB::select(
+    if (!empty($LAIN_LAIN)){
+        $data['LAIN - LAIN']=$LAIN_LAIN;
+    }
+    $LINGKUNGAN_KERJA= DB::select(
         'exec sp_TUnsDetail_list
                 ?,
                 ?
@@ -232,6 +244,23 @@ class TUnsDetail extends Controller
 
         ]
     );
+    if (!empty($LINGKUNGAN_KERJA)){
+        $data['LINGKUNGAN KERJA']=$LINGKUNGAN_KERJA;
+    }
+    $nearmiss = DB::select(
+        'exec sp_TUnsDetail_list
+                ?,
+                ?
+        ',
+        [
+                $request->UnsafeID,
+                ''
+
+        ]
+    );
+    if (!empty($nearmiss)){
+        $data['NEAR MISS']=$nearmiss;
+    }
     $response['data']=$data;
         return response()->json($response);
     }
