@@ -255,7 +255,7 @@ class TUnsDetail extends Controller
         ',
         [
                 $request->UnsafeID,
-                ''
+                'NEAR MISS'
 
         ]
     );
