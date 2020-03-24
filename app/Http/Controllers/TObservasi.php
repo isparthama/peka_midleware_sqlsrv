@@ -247,34 +247,7 @@ class TObservasi extends Controller
         return response()->download($file_path);
     }
 
-    public static function insert(Request $request){
-        $destinationPath = 'uploads';
-        $request->DateObs=str_replace('"','',$request->DateObs);
-
-        $file_1 = $request->file('attach_file_1');
-        if($file_1!=""){
-            $nama_file_1 = $file_1->getClientOriginalName();
-            $file_1->move($destinationPath,$file_1->getClientOriginalName());
-        }else{
-            $nama_file_1 = "-";
-        }
-
-        $file_2 = $request->file('attach_file_2');
-        if($file_2!=""){
-            $nama_file_2 = $file_2->getClientOriginalName();
-            $file_2->move($destinationPath,$file_2->getClientOriginalName());
-        }else{
-            $nama_file_2 = "-";
-        }
-
-        $file_3 = $request->file('attach_file_3');
-        if($file_3!=""){
-            $nama_file_3 = $file_3->getClientOriginalName();
-            $file_3->move($destinationPath,$file_3->getClientOriginalName());
-        }else{
-            $nama_file_3 = "-";
-        }
-        $request->FilePhoto = $nama_file_1.",".$nama_file_2.",".$nama_file_3;
+    public function insert(Request $request){
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
         $result = DB::select(
@@ -360,6 +333,46 @@ class TObservasi extends Controller
         foreach($result as $row)
         {
             $response['IDobservasion'] =$row->IDobservasion;
+
+            $destinationPath = 'uploads';
+            $request->DateObs=str_replace('"','',$request->DateObs);
+
+            $file_1 = $request->file('attach_file_1');
+            if($file_1!=""){
+                $nama_file_1 = $this->standard_name_file($row->IDobservasion,'OBS',1,$file_1->getClientOriginalName());
+                $file_1->move($destinationPath,$nama_file_1);
+            }else{
+                $nama_file_1 = "-";
+            }
+
+            $file_2 = $request->file('attach_file_2');
+            if($file_2!=""){
+                $nama_file_2 = $this->standard_name_file($row->IDobservasion,'OBS',2,$file_2->getClientOriginalName());
+                $file_2->move($destinationPath,$nama_file_2);
+            }else{
+                $nama_file_2 = "-";
+            }
+
+            $file_3 = $request->file('attach_file_3');
+            if($file_3!=""){
+                $nama_file_3 = $this->standard_name_file($row->IDobservasion,'OBS',3,$file_3->getClientOriginalName());
+                $file_3->move($destinationPath,$nama_file_3);
+            }else{
+                $nama_file_3 = "-";
+            }
+
+            $request->FilePhoto = $nama_file_1.",".$nama_file_2.",".$nama_file_3;
+
+            $result=DB::select(
+                'exec sp_TObservasi_update_filephoto 
+                ?,
+                ?',
+                [
+                    $row->IDobservasion,
+                    $request->FilePhoto
+                ]
+            );
+
             $detail=explode(",",$request->unsafeDetailId);
             foreach($detail as $Subksid)
             {
