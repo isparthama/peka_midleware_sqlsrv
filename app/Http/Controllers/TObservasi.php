@@ -415,53 +415,57 @@ class TObservasi extends Controller
         if($file_1!=""){
             $nama_file_1 = $this->standard_name_file($request->IDobservasion,'OBS',1,$file_1->getClientOriginalName());
             $file_1->move($destinationPath,$nama_file_1);
-        }else{
-            $nama_file_1 = "-";
+            $request->FilePhoto=$request->FilePhoto.",".$nama_file_1;
         }
 
         $file_2 = $request->file('attach_file_2');
         if($file_2!=""){
             $nama_file_2 = $this->standard_name_file($request->IDobservasion,'OBS',2,$file_2->getClientOriginalName());
             $file_2->move($destinationPath,$nama_file_2);
-        }else{
-            $nama_file_2 = "-";
+            $request->FilePhoto=$request->FilePhoto.",".$nama_file_2;
         }
 
         $file_3 = $request->file('attach_file_3');
         if($file_3!=""){
             $nama_file_3 = $this->standard_name_file($request->IDobservasion,'OBS',3,$file_3->getClientOriginalName());
             $file_3->move($destinationPath,$nama_file_3);
-        }else{
-            $nama_file_3 = "-";
+            $request->FilePhoto=$request->FilePhoto.",".$nama_file_3;
         }
 
-        $request->FilePhoto = $nama_file_1.",".$nama_file_2.",".$nama_file_3;
+        $Observasi = DB::select(
+                'exec sp_TObservasi_get
+                        ?
+                ',
+                [
+                    $request->IDobservasion
 
+                ]
+        );
+        if ($request->FilePhoto==null) $request->FilePhoto=$Observasi[0]->FilePhoto;
+        
+        
         $file_1_pic = $request->file('attach_file_1_pic');
         if($file_1_pic!=""){
             $nama_file_1_pic = $this->standard_name_file($request->IDobservasion,'PIC',1,$file_1_pic->getClientOriginalName());
             $file_1_pic->move($destinationPath,$nama_file_1_pic);
-        }else{
-            $nama_file_1_pic = "-";
+            $request->Pengelolahinfor=$request->Pengelolahinfor.",".$nama_file_1_pic;
         }
 
         $file_2_pic = $request->file('attach_file_2_pic');
         if($file_2_pic!=""){
             $nama_file_2_pic = $this->standard_name_file($request->IDobservasion,'PIC',2,$file_2_pic->getClientOriginalName());
             $file_2_pic->move($destinationPath,$nama_file_2_pic);
-        }else{
-            $nama_file_2_pic = "-";
+            $request->Pengelolahinfor=$request->Pengelolahinfor.",".$nama_file_2_pic;
         }
 
         $file_3_pic = $request->file('attach_file_3_pic');
         if($file_3_pic!=""){
             $nama_file_3_pic = $this->standard_name_file($request->IDobservasion,'PIC',3,$file_3_pic->getClientOriginalName());
             $file_3_pic->move($destinationPath,$nama_file_3_pic);
-        }else{
-            $nama_file_3_pic = "-";
+            $request->Pengelolahinfor=$request->Pengelolahinfor.",".$nama_file_3_pic;
         }
 
-        $request->Pengelolahinfor = $nama_file_1_pic.",".$nama_file_2_pic.",".$nama_file_3_pic;
+        if ($request->Pengelolahinfor==null) $request->Pengelolahinfor=$Observasi[0]->Pengelolahinfor;
 
         $response['status'] = 'SUCCESS';
         $response['code'] = 200;
