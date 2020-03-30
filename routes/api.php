@@ -43,3 +43,6 @@ Route::post('TObsKlas/get','TObsKlas@get');
 Route::post('TObsKlas/delete','TObsKlas@delete');
 Route::post('TObsKlas/insert','TObsKlas@insert');
 Route::post('TObsKlas/update','TObsKlas@updateapi');
+
+Route::post('NotifikasiEmailController/sendemail','NotifikasiEmailController@sendemail');
+Route::post('NotifikasiEmailController/kirimEmailMulti','NotifikasiEmailController@kirimEmailMulti');
