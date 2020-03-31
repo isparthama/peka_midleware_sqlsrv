@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 use App\Mail\NotifikasiEmail;
-use App\Http\Controllers\TicketingRequestController;
+use App\Http\Controllers\TObservasi;
+use App\ModelTObservasi;
 
 class NotifikasiEmailController extends Controller
 {
@@ -21,39 +22,53 @@ class NotifikasiEmailController extends Controller
 
     }
 
-    public function sendEmailRequest($row)
+    public function sendEmailRequest($idobservasion)
     {
         try{
-            Mail::send('notif_email_request',
-            [
-                'Nomor_Observasi_ID' => $row->IDobservasion,
-                'Tanggal_Pengamatan' => $row->DateObs,
-                'Pengamatan' => $row->Pengamatan,
-                'Nama_Pelapor' => $row->NamaEmploye,
-                'Fungsi' => $row->FungsiName,
-                'Lokasi' => $row->CreateDate,
-            ],
-            function ($pesan) use ($row)
-            {
-                $pesan->subject('[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi);
-                $pesan->from('do-not-reply@pekapepc', 'PEKA');
-                $pesan->to($row->Email);
-            });
+            $sql="exec sp_TObservasi_get $idobservasion";
+            $modelTObservasi=new ModelTObservasi();
+            $TObservasi=$modelTObservasi->hydrate(
+                    DB::select($sql));
+            $row=$TObservasi->first();
 
-            return response (['status' => true,'errors' => 'none']);
+            $email_content='<HTML>'.
+                '<br>Nomor_Observasi_ID: ' . $row->IDobservasion.
+                '<br>Tanggal_Pengamatan: ' . $row->DateObs.
+                '<br>Pengamatan: ' . $row->Pengamatan.
+                '<br>Nama_Pelapor: ' . $row->NamaEmploye.
+                '<br>Fungsi: ' . $row->FungsiName.
+                '<br>Lokasi: ' . $row->lokasi_tempat.
+                '<br></HTML>';
+            $emailNotif=[
+                [
+                    'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                    'body'=>$email_content,
+                    'mailto'=>$row->Email,
+                    'cc'=>'jodhi.sugihartono@pertamina.com',
+                    'bcc'=>''
+                ]
+            ];
+
+            $emailNotif=json_decode(json_encode($emailNotif), FALSE);
+            $send_result=$this->kirimEmailMulti($emailNotif);
+
+            return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
         }
         catch (Exception $e){
             return response (['status' => false,'errors' => $e->getMessage()]);
         }
     }
 
+    public function gettemplate($processapl){
+    
+    }
 
     public function sendemail(){
         try{
             $emailNotif=[
                 [
                     'subject'=>'tes email peka1',
-                    'body'=>'tes email peka1',
+                    'body'=>$this->gettemplate(110),
                     'mailto'=>'trainee04@pertamina.com',
                     'cc'=>'jodhi.sugihartono@pertamina.com',
                     'bcc'=>''
