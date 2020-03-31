@@ -334,7 +334,7 @@ class TObservasi extends Controller
         {
             $response['IDobservasion'] =$row->IDobservasion;
 
-            $destinationPath = 'uploads';
+            $destinationPath = env('PATH_UPLOADS');
             $request->DateObs=str_replace('"','',$request->DateObs);
 
             $file_1 = $request->file('attach_file_1');
@@ -408,7 +408,7 @@ class TObservasi extends Controller
         return $RenameFile;
     }
     public  function updateapi(Request $request){
-        $destinationPath = 'uploads';
+        $destinationPath = env('PATH_UPLOADS');//'uploads';
         $request->DateObs=str_replace('"','',$request->DateObs);
 
         $file_1 = $request->file('attach_file_1');
