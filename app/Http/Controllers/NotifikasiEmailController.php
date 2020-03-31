@@ -31,28 +31,32 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
-            $email_content='<HTML>'.
-                '<br>Nomor_Observasi_ID: ' . $row->IDobservasion.
-                '<br>Tanggal_Pengamatan: ' . $row->DateObs.
-                '<br>Pengamatan: ' . $row->Pengamatan.
-                '<br>Nama_Pelapor: ' . $row->NamaEmploye.
-                '<br>Fungsi: ' . $row->FungsiName.
-                '<br>Lokasi: ' . $row->lokasi_tempat.
-                '<br></HTML>';
-            $emailNotif=[
-                [
-                    'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
-                    'body'=>$email_content,
-                    'mailto'=>$row->Email,
-                    'cc'=>'jodhi.sugihartono@pertamina.com',
-                    'bcc'=>''
-                ]
-            ];
+            if ($row->processApl==110){
+                $email_content='<HTML>'.
+                    '<br>Nomor_Observasi_ID: ' . $row->IDobservasion.
+                    '<br>Tanggal_Pengamatan: ' . $row->DateObs.
+                    '<br>Pengamatan: ' . $row->Pengamatan.
+                    '<br>Nama_Pelapor: ' . $row->NamaEmploye.
+                    '<br>Fungsi: ' . $row->FungsiName.
+                    '<br>Lokasi: ' . $row->lokasi_tempat.
+                    '<br></HTML>';
+                $emailNotif=[
+                    [
+                        'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                        'body'=>$email_content,
+                        'mailto'=>$row->Email,
+                        'cc'=>'jodhi.sugihartono@pertamina.com',
+                        'bcc'=>''
+                    ]
+                ];
 
-            $emailNotif=json_decode(json_encode($emailNotif), FALSE);
-            $send_result=$this->kirimEmailMulti($emailNotif);
+                $emailNotif=json_decode(json_encode($emailNotif), FALSE);
+                $send_result=$this->kirimEmailMulti($emailNotif);
 
-            return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
+                return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
+            } else {
+                return response (['status' => true,'errors' => 'hanya submit request yang kirim email']);
+            }
         }
         catch (Exception $e){
             return response (['status' => false,'errors' => $e->getMessage()]);
