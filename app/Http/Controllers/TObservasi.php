@@ -391,7 +391,7 @@ class TObservasi extends Controller
             $response['unsafeDetailId']=$detail;
             $emailNotif = new NotifikasiEmailController();
             if($row->processApl>100){
-                $response['Email']=$emailNotif->sendEmailRequest($row);
+                $response['Email']=$emailNotif->sendEmailRequest($row->IDobservasion);
             }
         }
         $response['data']=$result;
@@ -568,7 +568,7 @@ class TObservasi extends Controller
             $response['unsafeDetailId']=$detail;
             $emailNotif = new NotifikasiEmailController();
             if($row->processApl>100){
-                $response['Email']=$emailNotif->sendEmailRequest($row);
+                $response['Email']=$emailNotif->sendEmailRequest($row->IDobservasion);
             }
         }
         $response['data']=$result;
