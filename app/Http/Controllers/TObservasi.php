@@ -243,7 +243,7 @@ class TObservasi extends Controller
 
     public function downloadFile($namafile)
     {
-        $file_path = public_path(env('PATH_UPLOADS').'/'.$namafile);
+        $file_path = env('PATH_UPLOADS').'/'.$namafile;
         return response()->download($file_path);
     }
 
