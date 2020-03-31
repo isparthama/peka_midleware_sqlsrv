@@ -216,8 +216,20 @@ class TObservasi extends Controller
 
         foreach ($Observasi as $o){
             $ObsKlass = DB::select('exec sp_TObsKlas_list '.$o->IDobservasion);
-
             $o->unsafedetail=$ObsKlass;
+
+            $costcenterlist = DB::select('exec sp_PekaCostCenter_list');
+            $o->costcenterlist=$costcenterlist;
+
+            $pekaemployeelist = DB::select('exec sp_PekaEmployee_list');
+            $o->pekaemployeelist=$pekaemployeelist;
+
+            $arealist = DB::select('exec sp_TArea_list_area');
+            $o->arealist=$arealist;
+
+            $subarealist = DB::select('exec sp_TSubArea_list_area '.$o->AreaID);
+            $o->subarealist=$subarealist;
+
         }
 
         $response['data']=$Observasi;
