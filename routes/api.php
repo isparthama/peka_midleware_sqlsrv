@@ -46,3 +46,4 @@ Route::post('TObsKlas/update','TObsKlas@updateapi');
 
 Route::post('NotifikasiEmailController/sendemail','NotifikasiEmailController@sendemail');
 Route::post('NotifikasiEmailController/kirimEmailMulti','NotifikasiEmailController@kirimEmailMulti');
+Route::post('NotifikasiEmailController/sendEmailRequest/{idobservasion}','NotifikasiEmailController@sendEmailRequest');
