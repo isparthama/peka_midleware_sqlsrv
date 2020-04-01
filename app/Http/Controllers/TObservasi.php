@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 use App\Http\Controllers\NotifikasiEmailController;
+use App\Http\Controllers\TUnsDetail;
 class TObservasi extends Controller
 {
     /**
@@ -227,8 +228,13 @@ class TObservasi extends Controller
             $arealist = DB::select('exec sp_TArea_list_area');
             $o->arealist=$arealist;
 
-            $subarealist = DB::select('exec sp_TSubArea_list_area '.$o->AreaID);
+            $subarealist = DB::select('exec sp_TSubArea_list_area '.$o->IDklasifikasi);
             $o->subarealist=$subarealist;
+
+            $unsafelist = DB::select('exec sp_TUnsafe_list');
+            $o->unsafelist=$unsafelist;
+
+
 
         }
 
