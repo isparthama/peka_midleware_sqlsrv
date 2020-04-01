@@ -140,7 +140,7 @@ class NotifikasiEmailController extends Controller
 
     public function getEmailAddress($costcenter){
         $emailaddress='';
-        $resultset=DB::select("exec getEmailAddress '".$costcenter."'");
+        $resultset=DB::select("exec sp_getEmailAddress '".$costcenter."'");
         foreach ($resultset as $row){
             $emailaddress=$emailaddress.$row->email.",";
         }
