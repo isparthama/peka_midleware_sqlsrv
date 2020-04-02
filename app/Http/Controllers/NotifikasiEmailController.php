@@ -32,7 +32,6 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
-            
             if ($row->processApl==110){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
@@ -121,7 +120,7 @@ class NotifikasiEmailController extends Controller
                     [
                         'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
                         'body'=>$email_content_user,
-                        'mailto'=>$row->Email,
+                        'mailto'=>$row->Email.','.$this->getEmailAddress_Pengelola($row->PICSign),
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ]
