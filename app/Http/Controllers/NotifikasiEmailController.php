@@ -32,6 +32,7 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
+            
             if ($row->processApl==110){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
@@ -56,7 +57,7 @@ class NotifikasiEmailController extends Controller
                     [
                         'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
                         'body'=>$email_content_pengelola,
-                        'mailto'=>$row->Email,
+                        'mailto'=>$this->getEmailAddress_Pengelola($row->PICSign),
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ]
@@ -141,6 +142,15 @@ class NotifikasiEmailController extends Controller
     public function getEmailAddress($costcenter){
         $emailaddress='';
         $resultset=DB::select("exec sp_getEmailAddress '".$costcenter."'");
+        foreach ($resultset as $row){
+            $emailaddress=$emailaddress.$row->email.",";
+        }
+        return substr($emailaddress,0,strlen($emailaddress)-1);
+    }
+
+    public function getEmailAddress_Pengelola(){
+        $emailaddress='';
+        $resultset=DB::select("exec sp_getEmailAddress_Pengelola");
         foreach ($resultset as $row){
             $emailaddress=$emailaddress.$row->email.",";
         }
