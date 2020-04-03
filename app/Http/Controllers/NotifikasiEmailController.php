@@ -142,7 +142,7 @@ class NotifikasiEmailController extends Controller
         $emailaddress='';
         $resultset=DB::select("exec sp_getEmailAddress '".$costcenter."'");
         foreach ($resultset as $row){
-            $emailaddress=$emailaddress.$row->email.",";
+            $emailaddress=$emailaddress.$row->email.";";
         }
         return substr($emailaddress,0,strlen($emailaddress)-1);
     }
@@ -151,7 +151,7 @@ class NotifikasiEmailController extends Controller
         $emailaddress='';
         $resultset=DB::select("exec sp_getEmailAddress_Pengelola");
         foreach ($resultset as $row){
-            $emailaddress=$emailaddress.$row->email.",";
+            $emailaddress=$emailaddress.$row->email.";";
         }
         return substr($emailaddress,0,strlen($emailaddress)-1);
     }
