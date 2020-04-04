@@ -120,7 +120,7 @@ class NotifikasiEmailController extends Controller
                     [
                         'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
                         'body'=>$email_content_user,
-                        'mailto'=>$row->Email.','.$this->getEmailAddress_Pengelola($row->PICSign),
+                        'mailto'=>$this->getEmailAddress_Pengelola($row->Email),
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ]
@@ -147,13 +147,13 @@ class NotifikasiEmailController extends Controller
         return substr($emailaddress,0,strlen($emailaddress)-1);
     }
 
-    public function getEmailAddress_Pengelola(){
-        $emailaddress='';
+    public function getEmailAddress_Pengelola($Email){
+        $emailaddress=$Email;
         $resultset=DB::select("exec sp_getEmailAddress_Pengelola");
         foreach ($resultset as $row){
-            $emailaddress=$emailaddress.$row->email.";";
+            $emailaddress=$emailaddress.";".$row->email;
         }
-        return substr($emailaddress,0,strlen($emailaddress)-1);
+        return $emailaddress;
     }
 
     public function sendemail(){
