@@ -32,6 +32,7 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
+            $row->processApl=110;
             if ($row->processApl==110){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
@@ -39,7 +40,8 @@ class NotifikasiEmailController extends Controller
                     'Pengamatan'=>$row->Pengamatan,
                     'Nama_Pelapor'=>$row->NamaEmploye,
                     'Fungsi'=>$row->FungsiName,
-                    'Lokasi'=>$row->lokasi_tempat
+                    'Lokasi'=>$row->lokasi_tempat,
+                    'link_webapp'=>env('LINK_WEBAPP')
                 ];
                 
                 $email_content_user=(string)View::make('notif_email_request',$email_content);
@@ -80,7 +82,8 @@ class NotifikasiEmailController extends Controller
                     'Lokasi'=>$row->lokasi_tempat,
                     'Informasi_untuk_pic'=>$row->PICInformasi,
                     'tindakan_langsung'=>$row->langsung,
-                    'tgl_laporan_observasi'=> $row->CreateDate
+                    'tgl_laporan_observasi'=> $row->CreateDate,
+                    'link_webapp'=>env('LINK_WEBAPP')
                 ];
                 
                 $email_content_user=(string)View::make('notif_email_pic',$email_content);
@@ -111,7 +114,8 @@ class NotifikasiEmailController extends Controller
                     'Lokasi'=>$row->lokasi_tempat,
                     'Tindak_Lanjut_PIC'=>$row->Aksi,
                     'tindakan_langsung'=>$row->langsung,
-                    'Tanggal_penyelesaian'=> $row->AksiDate
+                    'Tanggal_penyelesaian'=> $row->AksiDate,
+                    'link_webapp'=>env('LINK_WEBAPP')
                 ];
                 
                 $email_content_user=(string)View::make('notif_email_approved',$email_content);

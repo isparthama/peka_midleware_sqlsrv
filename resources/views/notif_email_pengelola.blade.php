@@ -38,7 +38,7 @@
             </table>
         </td>
     </tr>
-    <tr><td>Untuk lebih detail silahkan klik <a href="http://localhost:8000/ticketing/request/view_data/{{$Nomor_Observasi_ID}}" target="_blank">LINK</a> berikut</td></tr>
+    <tr><td>Untuk lebih detail silahkan klik <a href="{{$link_webapp}}" target="_blank">LINK</a> berikut</td></tr>
     <tr><td>&nbsp;</td></tr>
     <tr><td>This is an automated generated email message from PEKA PEPC application, please do not reply to this email.</td></tr>
 </table>
