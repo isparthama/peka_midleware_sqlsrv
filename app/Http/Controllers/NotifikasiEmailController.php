@@ -32,6 +32,7 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
+            
             if ($row->processApl==110){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
@@ -48,14 +49,14 @@ class NotifikasiEmailController extends Controller
 
                 $emailNotif=[
                     [
-                        'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                        'subject'=>'[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
                         'mailto'=>$row->Email,
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ],
                     [
-                        'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                        'subject'=>'[PEKA-PEPC] REMINDER: VALIDASI OBSERVASI PEKA KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_pengelola,
                         'mailto'=>$this->getEmailAddress_Pengelola($row->PICSign),
                         'cc'=>'jodhi.sugihartono@pertamina.com',
@@ -72,6 +73,73 @@ class NotifikasiEmailController extends Controller
             
             
             if ($row->processApl==200){
+                if (strlen($row->RejectReason)>0){
+                    $email_content=[
+                        'Nomor_Observasi_ID'=>$row->IDobservasion,
+                        'Tanggal_Pengamatan'=>$row->DateObs,
+                        'Pengamatan'=>$row->Pengamatan,
+                        'Nama_Pelapor'=>$row->NamaEmploye,
+                        'Fungsi'=>$row->FungsiName,
+                        'Lokasi'=>$row->lokasi_tempat,
+                        'Tindak_Lanjut_PIC'=>$row->Aksi,
+                        'tindakan_langsung'=>$row->langsung,
+                        'Tanggal_penyelesaian'=> $row->AksiDate,
+                        'komentar_pengelola'=> $row->RejectReason,
+                        'link_webapp'=>env('LINK_WEBAPP')
+                    ];
+                    
+                    $email_content_user=(string)View::make('notif_email_reject_pic',$email_content);
+    
+                    $emailNotif=[
+                        [
+                            'subject'=>'[PEKA-PEPC] REJECT OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
+                            'body'=>$email_content_user,
+                            'mailto'=>$row->Email.';'.$this->getEmailAddress($row->PICSign),
+                            'cc'=>'jodhi.sugihartono@pertamina.com',
+                            'bcc'=>''
+                        ]
+                    ];
+    
+                    $send_result=[];
+                    $emailNotif=json_decode(json_encode($emailNotif), FALSE);
+                    $send_result=$this->kirimEmailMulti($emailNotif);
+    
+                    return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
+                } else {
+                    $email_content=[
+                        'Nomor_Observasi_ID'=>$row->IDobservasion,
+                        'Tanggal_Pengamatan'=>$row->DateObs,
+                        'Pengamatan'=>$row->Pengamatan,
+                        'Nama_Pelapor'=>$row->NamaEmploye,
+                        'Fungsi'=>$row->FungsiName,
+                        'Lokasi'=>$row->lokasi_tempat,
+                        'Informasi_untuk_pic'=>$row->PICInformasi,
+                        'tindakan_langsung'=>$row->langsung,
+                        'tgl_laporan_observasi'=> $row->CreateDate,
+                        'tgl_batas_tindak_lanjut'=>$row->PISignDate,
+                        'link_webapp'=>env('LINK_WEBAPP')
+                    ];
+                    
+                    $email_content_user=(string)View::make('notif_email_pic',$email_content);
+
+                    $emailNotif=[
+                        [
+                            'subject'=>'[PEKA-PEPC] REMINDER TINDAK LANJUT '.strtoupper($row->unsafename).' OBSERVASI PIC '.$row->PICSign,
+                            'body'=>$email_content_user,
+                            'mailto'=>$this->getEmailAddress($row->PICSign),
+                            'cc'=>'jodhi.sugihartono@pertamina.com',
+                            'bcc'=>''
+                        ]
+                    ];
+
+                    $send_result=[];
+                    $emailNotif=json_decode(json_encode($emailNotif), FALSE);
+                    $send_result=$this->kirimEmailMulti($emailNotif);
+
+                    return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
+                }
+            }
+            if ($row->processApl==300){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
                     'Tanggal_Pengamatan'=>$row->DateObs,
@@ -79,19 +147,19 @@ class NotifikasiEmailController extends Controller
                     'Nama_Pelapor'=>$row->NamaEmploye,
                     'Fungsi'=>$row->FungsiName,
                     'Lokasi'=>$row->lokasi_tempat,
-                    'Informasi_untuk_pic'=>$row->PICInformasi,
+                    'Tindak_Lanjut_PIC'=>$row->Aksi,
                     'tindakan_langsung'=>$row->langsung,
-                    'tgl_laporan_observasi'=> $row->CreateDate,
+                    'Tanggal_penyelesaian'=> $row->AksiDate,
                     'link_webapp'=>env('LINK_WEBAPP')
                 ];
                 
-                $email_content_user=(string)View::make('notif_email_pic',$email_content);
+                $email_content_user=(string)View::make('notif_email_tlpic',$email_content);
 
                 $emailNotif=[
                     [
-                        'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                        'subject'=>'[PEKA-PEPC] APPROVAL REQUEST OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
-                        'mailto'=>$this->getEmailAddress($row->PICSign),
+                        'mailto'=>$this->getEmailAddress_Pengelola(''),
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ]
@@ -121,9 +189,42 @@ class NotifikasiEmailController extends Controller
 
                 $emailNotif=[
                     [
-                        'subject'=>"[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' ID KLASIFIKASI '.$row->Klasifikasi",
+                        'subject'=>'[PEKA-PEPC] COMPLETE OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
-                        'mailto'=>$this->getEmailAddress_Pengelola($row->Email),
+                        'mailto'=>$row->Email,
+                        'cc'=>'jodhi.sugihartono@pertamina.com',
+                        'bcc'=>''
+                    ]
+                ];
+
+                $send_result=[];
+                $emailNotif=json_decode(json_encode($emailNotif), FALSE);
+                $send_result=$this->kirimEmailMulti($emailNotif);
+
+                return response (['status' => true,'errors' => 'none','emailNotif' => $emailNotif,'send_result'=>$send_result]);
+            } 
+            if ($row->processApl==900){
+                $email_content=[
+                    'Nomor_Observasi_ID'=>$row->IDobservasion,
+                    'Tanggal_Pengamatan'=>$row->DateObs,
+                    'Pengamatan'=>$row->Pengamatan,
+                    'Nama_Pelapor'=>$row->NamaEmploye,
+                    'Fungsi'=>$row->FungsiName,
+                    'Lokasi'=>$row->lokasi_tempat,
+                    'Tindak_Lanjut_PIC'=>$row->Aksi,
+                    'tindakan_langsung'=>$row->langsung,
+                    'Tanggal_penyelesaian'=> $row->AksiDate,
+                    'reject_reason'=> $row->RejectReason,
+                    'link_webapp'=>env('LINK_WEBAPP')
+                ];
+                
+                $email_content_user=(string)View::make('notif_email_reject_user',$email_content);
+
+                $emailNotif=[
+                    [
+                        'subject'=>'[PEKA-PEPC] REJECT OBSERVATION KLASIFIKASI '.strtoupper($row->unsafename).' ID '.$row->IDobservasion ,
+                        'body'=>$email_content_user,
+                        'mailto'=>$row->Email,
                         'cc'=>'jodhi.sugihartono@pertamina.com',
                         'bcc'=>''
                     ]
@@ -153,8 +254,18 @@ class NotifikasiEmailController extends Controller
     public function getEmailAddress_Pengelola($Email){
         $emailaddress=$Email;
         $resultset=DB::select("exec sp_getEmailAddress_Pengelola");
+        $i=0;
         foreach ($resultset as $row){
-            $emailaddress=$emailaddress.";".$row->email;
+            if ($Email==''){
+                if ($i==0){
+                    $emailaddress=$row->email;
+                } else {
+                    $emailaddress=$emailaddress.";".$row->email;
+                }
+            } else {
+                $emailaddress=$emailaddress.";".$row->email;
+            }
+            $i++;
         }
         return $emailaddress;
     }

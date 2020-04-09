@@ -1,24 +1,14 @@
 <table border="0" width="100%" style="border-collapse:collapse">
     <tr><td>Dengan Hormat,</td></tr>
     <tr><td>&nbsp;</td></tr>
-    <tr><td>Mohon lakukan tindak lanjut atas pelaporan sebagai berikut: </td></tr>
+    <tr><td>Mohon Persetujuan untuk hasil tindak lanjut PIC dari Observasi sbb: </td></tr>
     <tr>
         <td>
             <table border="0" width="100%" style="border-collapse:collapse">
                 <tr>
-                    <td width="20%">Nomor Observasi ID</td>
-                    <td width="1%">:</td>
-                    <td width="79%">{{$Nomor_Observasi_ID}}</td>
-                </tr>
-                <tr>
                     <td width="20%">Tanggal Pengamatan</td>
                     <td width="1%">:</td>
                     <td width="79%">{{$Tanggal_Pengamatan}}</td>
-                </tr>
-                <tr>
-                    <td width="20%">Lokasi</td>
-                    <td width="1%">:</td>
-                    <td width="79%">{{$Lokasi}}</td>
                 </tr>
                 <tr>
                     <td>Pengamatan</td>
@@ -26,25 +16,26 @@
                     <td>{{$Pengamatan}}</td>
                 </tr>
                 <tr>
-                    <td>Informasi untuk PIC</td>
+                    <td>Nama Pelapor</td>
                     <td>:</td>
-                    <td>{{$Informasi_untuk_pic}}</td>
+                    <td>{{$Nama_Pelapor}}</td>
                 </tr>
                 <tr>
-                    <td>Tindakan langsung pelapor</td>
+                    <td>Fungsi</td>
                     <td>:</td>
-                    <td>{{$tindakan_langsung}}</td>
+                    <td>{{$Fungsi}}</td>
                 </tr>
                 <tr>
-                    <td>Tanggal Lapor</td>
+                    <td>Lokasi</td>
                     <td>:</td>
-                    <td>{{$tgl_laporan_observasi}}</td>
+                    <td>{{$Lokasi}}</td>
                 </tr>
                 <tr>
-                    <td>Bata Penyelesaian Tindak Lanjut</td>
+                    <td>Tindak Lanjut PIC</td>
                     <td>:</td>
-                    <td>{{$tgl_batas_tindak_lanjut}}</td>
+                    <td>{{$Tindak_Lanjut_PIC}}</td>
                 </tr>
+                
             </table>
         </td>
     </tr>

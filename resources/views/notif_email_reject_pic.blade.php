@@ -1,24 +1,16 @@
 <table border="0" width="100%" style="border-collapse:collapse">
     <tr><td>Dengan Hormat,</td></tr>
     <tr><td>&nbsp;</td></tr>
-    <tr><td>Mohon lakukan tindak lanjut atas pelaporan sebagai berikut: </td></tr>
+    <tr><td>Mohon Maaf, tindak lanjut anda belum dapat disetujui dengan alasan sebagai berikut: </td></tr>
+    <tr><td>{{$komentar_pengelola}} </td></tr>
+    <tr><td>Atas laporan PIC: </td></tr>
     <tr>
         <td>
             <table border="0" width="100%" style="border-collapse:collapse">
                 <tr>
-                    <td width="20%">Nomor Observasi ID</td>
-                    <td width="1%">:</td>
-                    <td width="79%">{{$Nomor_Observasi_ID}}</td>
-                </tr>
-                <tr>
                     <td width="20%">Tanggal Pengamatan</td>
                     <td width="1%">:</td>
                     <td width="79%">{{$Tanggal_Pengamatan}}</td>
-                </tr>
-                <tr>
-                    <td width="20%">Lokasi</td>
-                    <td width="1%">:</td>
-                    <td width="79%">{{$Lokasi}}</td>
                 </tr>
                 <tr>
                     <td>Pengamatan</td>
@@ -26,25 +18,21 @@
                     <td>{{$Pengamatan}}</td>
                 </tr>
                 <tr>
-                    <td>Informasi untuk PIC</td>
+                    <td>Lokasi</td>
                     <td>:</td>
-                    <td>{{$Informasi_untuk_pic}}</td>
+                    <td>{{$Lokasi}}</td>
                 </tr>
                 <tr>
-                    <td>Tindakan langsung pelapor</td>
+                    <td>Tindak Lanjut PIC</td>
                     <td>:</td>
-                    <td>{{$tindakan_langsung}}</td>
+                    <td>{{$Tindak_Lanjut_PIC}}</td>
                 </tr>
                 <tr>
-                    <td>Tanggal Lapor</td>
+                    <td>Tanggal Penyelesaian</td>
                     <td>:</td>
-                    <td>{{$tgl_laporan_observasi}}</td>
+                    <td>{{$Tanggal_penyelesaian}}</td>
                 </tr>
-                <tr>
-                    <td>Bata Penyelesaian Tindak Lanjut</td>
-                    <td>:</td>
-                    <td>{{$tgl_batas_tindak_lanjut}}</td>
-                </tr>
+                
             </table>
         </td>
     </tr>
