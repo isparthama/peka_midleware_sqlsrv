@@ -32,7 +32,6 @@ class NotifikasiEmailController extends Controller
                     DB::select($sql));
             $row=$TObservasi->first();
 
-            
             if ($row->processApl==110){
                 $email_content=[
                     'Nomor_Observasi_ID'=>$row->IDobservasion,
@@ -73,7 +72,7 @@ class NotifikasiEmailController extends Controller
             
             
             if ($row->processApl==200){
-                if (strlen($row->RejectReason)>0){
+                if (strlen($row->PICEmail)>0){
                     $email_content=[
                         'Nomor_Observasi_ID'=>$row->IDobservasion,
                         'Tanggal_Pengamatan'=>$row->DateObs,
@@ -84,7 +83,7 @@ class NotifikasiEmailController extends Controller
                         'Tindak_Lanjut_PIC'=>$row->Aksi,
                         'tindakan_langsung'=>$row->langsung,
                         'Tanggal_penyelesaian'=> $row->AksiDate,
-                        'komentar_pengelola'=> $row->RejectReason,
+                        'komentar_pengelola'=> $row->AksiComment,
                         'link_webapp'=>env('LINK_WEBAPP')
                     ];
                     
