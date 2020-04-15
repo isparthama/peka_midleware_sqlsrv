@@ -84,16 +84,27 @@ class NotifikasiEmailController extends Controller
                         'tindakan_langsung'=>$row->langsung,
                         'Tanggal_penyelesaian'=> $row->AksiDate,
                         'komentar_pengelola'=> $row->AksiComment,
+                        'Informasi_untuk_pic'=>$row->PICInformasi,
+                        'tgl_laporan_observasi'=> $row->CreateDate,
+                        'tgl_batas_tindak_lanjut'=>$row->PISignDate,
                         'link_webapp'=>env('LINK_WEBAPP')
                     ];
                     
                     $email_content_user=(string)View::make('notif_email_reject_pic',$email_content);
-    
+                    $email_content_user=(string)View::make('notif_email_pic',$email_content);
+
                     $emailNotif=[
                         [
                             'subject'=>'[PEKA-PEPC] REJECT OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                             'body'=>$email_content_user,
-                            'mailto'=>$row->Email.';'.$this->getEmailAddress($row->PICSign),
+                            'mailto'=>$row->Email,
+                            'cc'=>'jodhi.sugihartono@pertamina.com',
+                            'bcc'=>''
+                        ],
+                        [
+                            'subject'=>'[PEKA-PEPC] REMINDER TINDAK LANJUT '.strtoupper($row->unsafename).' OBSERVASI PIC '.$row->PICSign,
+                            'body'=>$email_content_user,
+                            'mailto'=>$this->getEmailAddress($row->PICSign),
                             'cc'=>'jodhi.sugihartono@pertamina.com',
                             'bcc'=>''
                         ]
