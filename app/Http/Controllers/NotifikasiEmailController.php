@@ -51,15 +51,15 @@ class NotifikasiEmailController extends Controller
                         'subject'=>'[PEKA-PEPC] NEW OBSERVATION '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
                         'mailto'=>$row->Email,
-                        'cc'=>'jodhi.sugihartono@pertamina.com',
-                        'bcc'=>''
+                        'cc'=>'',
+                        'bcc'=>'jodhi.sugihartono@pertamina.com'
                     ],
                     [
                         'subject'=>'[PEKA-PEPC] REMINDER: VALIDASI OBSERVASI PEKA KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_pengelola,
                         'mailto'=>$this->getEmailAddress_Pengelola($row->PICSign),
-                        'cc'=>'jodhi.sugihartono@pertamina.com',
-                        'bcc'=>''
+                        'cc'=>'',
+                        'bcc'=>'jodhi.sugihartono@pertamina.com'
                     ]
                 ];
 
@@ -91,22 +91,22 @@ class NotifikasiEmailController extends Controller
                     ];
                     
                     $email_content_user=(string)View::make('notif_email_reject_pic',$email_content);
-                    $email_content_user=(string)View::make('notif_email_pic',$email_content);
+                    $email_content_pic=(string)View::make('notif_email_pic',$email_content);
 
                     $emailNotif=[
                         [
                             'subject'=>'[PEKA-PEPC] REJECT OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                             'body'=>$email_content_user,
                             'mailto'=>$row->Email,
-                            'cc'=>'jodhi.sugihartono@pertamina.com',
-                            'bcc'=>''
+                            'cc'=>'',
+                            'bcc'=>'jodhi.sugihartono@pertamina.com'
                         ],
                         [
                             'subject'=>'[PEKA-PEPC] REMINDER TINDAK LANJUT '.strtoupper($row->unsafename).' OBSERVASI PIC '.$row->PICSign,
-                            'body'=>$email_content_user,
+                            'body'=>$email_content_pic,
                             'mailto'=>$this->getEmailAddress($row->PICSign),
-                            'cc'=>'jodhi.sugihartono@pertamina.com',
-                            'bcc'=>''
+                            'cc'=>'',
+                            'bcc'=>'jodhi.sugihartono@pertamina.com'
                         ]
                     ];
     
@@ -137,8 +137,8 @@ class NotifikasiEmailController extends Controller
                             'subject'=>'[PEKA-PEPC] REMINDER TINDAK LANJUT '.strtoupper($row->unsafename).' OBSERVASI PIC '.$row->PICSign,
                             'body'=>$email_content_user,
                             'mailto'=>$this->getEmailAddress($row->PICSign),
-                            'cc'=>'jodhi.sugihartono@pertamina.com',
-                            'bcc'=>''
+                            'cc'=>'',
+                            'bcc'=>'jodhi.sugihartono@pertamina.com'
                         ]
                     ];
 
@@ -170,8 +170,8 @@ class NotifikasiEmailController extends Controller
                         'subject'=>'[PEKA-PEPC] APPROVAL REQUEST OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
                         'mailto'=>$this->getEmailAddress_Pengelola(''),
-                        'cc'=>'jodhi.sugihartono@pertamina.com',
-                        'bcc'=>''
+                        'cc'=>'',
+                        'bcc'=>'jodhi.sugihartono@pertamina.com'
                     ]
                 ];
 
@@ -202,8 +202,8 @@ class NotifikasiEmailController extends Controller
                         'subject'=>'[PEKA-PEPC] COMPLETE OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                         'body'=>$email_content_user,
                         'mailto'=>$row->Email,
-                        'cc'=>'jodhi.sugihartono@pertamina.com',
-                        'bcc'=>''
+                        'cc'=>'',
+                        'bcc'=>'jodhi.sugihartono@pertamina.com'
                     ]
                 ];
 
@@ -235,8 +235,8 @@ class NotifikasiEmailController extends Controller
                         'subject'=>'[PEKA-PEPC] REJECT OBSERVATION KLASIFIKASI '.strtoupper($row->unsafename).' ID '.$row->IDobservasion ,
                         'body'=>$email_content_user,
                         'mailto'=>$row->Email,
-                        'cc'=>'jodhi.sugihartono@pertamina.com',
-                        'bcc'=>''
+                        'cc'=>'',
+                        'bcc'=>'jodhi.sugihartono@pertamina.com'
                     ]
                 ];
 
@@ -287,15 +287,15 @@ class NotifikasiEmailController extends Controller
                     'subject'=>'tes email peka1',
                     'body'=>$this->gettemplate(110),
                     'mailto'=>'trainee04@pertamina.com',
-                    'cc'=>'jodhi.sugihartono@pertamina.com',
-                    'bcc'=>''
+                    'cc'=>'',
+                    'bcc'=>'jodhi.sugihartono@pertamina.com'
                 ],
                 [
                     'subject'=>'tes email peka2',
                     'body'=>'tes email peka2',
                     'mailto'=>'trainee06@pertamina.com',
-                    'cc'=>'jodhi.sugihartono@pertamina.com',
-                    'bcc'=>''
+                    'cc'=>'',
+                    'bcc'=>'jodhi.sugihartono@pertamina.com'
                 ]
                 ];
 
