@@ -72,7 +72,7 @@ class NotifikasiEmailController extends Controller
             
             
             if ($row->processApl==200){
-                if (strlen($row->PICEmail)>0){
+                if (strlen($row->AksiComment)>0){
                     $email_content=[
                         'Nomor_Observasi_ID'=>$row->IDobservasion,
                         'Tanggal_Pengamatan'=>$row->DateObs,
