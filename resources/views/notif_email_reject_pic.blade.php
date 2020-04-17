@@ -1,7 +1,7 @@
 <table border="0" width="100%" style="border-collapse:collapse">
     <tr><td>Dengan Hormat,</td></tr>
     <tr><td>&nbsp;</td></tr>
-    <tr><td>Mohon Maaf, tindak lanjut anda belum dapat disetujui dengan alasan sebagai berikut: </td></tr>
+    <tr><td>Mohon Maaf, tindak lanjut yang dilakukan belum dapat disetujui dengan alasan sebagai berikut: </td></tr>
     <tr><td>{{$komentar_pengelola}} </td></tr>
     <tr><td>Atas laporan PIC: </td></tr>
     <tr>

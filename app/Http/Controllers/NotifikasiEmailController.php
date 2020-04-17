@@ -91,21 +91,13 @@ class NotifikasiEmailController extends Controller
                     ];
                     
                     $email_content_user=(string)View::make('notif_email_reject_pic',$email_content);
-                    $email_content_pic=(string)View::make('notif_email_pic',$email_content);
 
                     $emailNotif=[
                         [
                             'subject'=>'[PEKA-PEPC] REJECT OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
                             'body'=>$email_content_user,
-                            'mailto'=>$row->Email,
-                            'cc'=>'',
-                            'bcc'=>'jodhi.sugihartono@pertamina.com'
-                        ],
-                        [
-                            'subject'=>'[PEKA-PEPC] REMINDER TINDAK LANJUT '.strtoupper($row->unsafename).' OBSERVASI PIC '.$row->PICSign,
-                            'body'=>$email_content_pic,
                             'mailto'=>$this->getEmailAddress($row->PICSign),
-                            'cc'=>'',
+                            'cc'=>$row->Email.";".$this->getEmailAddress_Pengelola(''),
                             'bcc'=>'jodhi.sugihartono@pertamina.com'
                         ]
                     ];
