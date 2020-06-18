@@ -184,11 +184,16 @@ class NotifikasiEmailController extends Controller
                     'Tindak_Lanjut_PIC'=>$row->Aksi,
                     'tindakan_langsung'=>$row->langsung,
                     'Tanggal_penyelesaian'=> $row->AksiDate,
+                    'Nama_Pelapor'=>$row->NamaEmploye,
+                    'Fungsi'=>$row->FungsiName,
                     'link_webapp'=>env('LINK_WEBAPP')
                 ];
                 
-                $email_content_user=(string)View::make('notif_email_approved',$email_content);
-
+                if (strlen($row->Aksi)>0){
+                    $email_content_user=(string)View::make('notif_email_approved',$email_content);
+                } else {
+                    $email_content_user=(string)View::make('notif_email_approved_nopic',$email_content);
+                }
                 $emailNotif=[
                     [
                         'subject'=>'[PEKA-PEPC] COMPLETE OBSERVATION ID '.$row->IDobservasion.' KLASIFIKASI '.strtoupper($row->unsafename),
